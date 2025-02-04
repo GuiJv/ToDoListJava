@@ -2,7 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package gui;
+package view;
+
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -13,8 +15,13 @@ public class todo extends javax.swing.JFrame {
     /**
      * Creates new form todo
      */
+    
+    DefaultTableModel model;
+    
     public todo() {
         initComponents();
+        
+        model = (DefaultTableModel) table.getModel();
     }
 
     /**
@@ -34,12 +41,16 @@ public class todo extends javax.swing.JFrame {
         type1 = new javax.swing.JRadioButton();
         type2 = new javax.swing.JRadioButton();
         task = new javax.swing.JTextField();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
+
+        inputWindow.setTitle("Cadastro");
+        inputWindow.setMinimumSize(new java.awt.Dimension(400, 400));
 
         jButton5.setText("Criar");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -49,11 +60,17 @@ public class todo extends javax.swing.JFrame {
         });
 
         jButton6.setText("Cancelar");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Tarefa");
 
         jLabel2.setText("Tipo");
 
+        buttonGroup1.add(type1);
         type1.setText("Trabalho");
         type1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -61,6 +78,7 @@ public class todo extends javax.swing.JFrame {
             }
         });
 
+        buttonGroup1.add(type2);
         type2.setText("Tarefa de Casa");
 
         task.addActionListener(new java.awt.event.ActionListener() {
@@ -74,26 +92,25 @@ public class todo extends javax.swing.JFrame {
         inputWindowLayout.setHorizontalGroup(
             inputWindowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inputWindowLayout.createSequentialGroup()
-                .addGroup(inputWindowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, inputWindowLayout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addGroup(inputWindowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(inputWindowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(inputWindowLayout.createSequentialGroup()
-                                .addComponent(type1)
-                                .addGap(33, 33, 33)
-                                .addComponent(type2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE))
-                            .addComponent(task)))
+                .addGap(27, 27, 27)
+                .addGroup(inputWindowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addGap(18, 18, 18)
+                .addGroup(inputWindowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(inputWindowLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton6)))
+                        .addComponent(type1)
+                        .addGap(33, 33, 33)
+                        .addComponent(type2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE))
+                    .addComponent(task))
                 .addGap(32, 32, 32))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inputWindowLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton6)
+                .addGap(20, 20, 20))
         );
         inputWindowLayout.setVerticalGroup(
             inputWindowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,7 +124,7 @@ public class todo extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(type1)
                     .addComponent(type2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(inputWindowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton5)
                     .addComponent(jButton6))
@@ -117,6 +134,11 @@ public class todo extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("jButton2");
 
@@ -124,7 +146,7 @@ public class todo extends javax.swing.JFrame {
 
         jButton4.setText("jButton4");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -147,7 +169,7 @@ public class todo extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(table);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -185,7 +207,16 @@ public class todo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        String type = "";
+        if(type1.isSelected()){
+            type = "Trabalho";
+        }
+        if(type2.isSelected()){
+            type = "Tarefa de Casa";
+        }
+        
+        model.addRow(new Object[]{1, task.getText(), type, false});
+        inputWindow.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void type1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_type1ActionPerformed
@@ -195,6 +226,14 @@ public class todo extends javax.swing.JFrame {
     private void taskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_taskActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_taskActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        inputWindow.dispose();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        inputWindow.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -232,6 +271,7 @@ public class todo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JDialog inputWindow;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -242,7 +282,7 @@ public class todo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable table;
     private javax.swing.JTextField task;
     private javax.swing.JRadioButton type1;
     private javax.swing.JRadioButton type2;
