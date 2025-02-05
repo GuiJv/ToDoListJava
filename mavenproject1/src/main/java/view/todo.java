@@ -5,6 +5,9 @@
 package view;
 
 import javax.swing.table.DefaultTableModel;
+import models.TaskModel;
+import taskDAO.TaskDAO;
+import java.util.List;
 
 /**
  *
@@ -17,11 +20,15 @@ public class todo extends javax.swing.JFrame {
      */
     
     DefaultTableModel model;
+    TaskDAO taskDAO;
     
     public todo() {
         initComponents();
         
+        this.taskDAO = new TaskDAO(); 
         model = (DefaultTableModel) table.getModel();
+        
+        fillTable();
     }
 
     /**
@@ -200,17 +207,43 @@ public class todo extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        String type = "";
-        if(type1.isSelected()){
-            type = "Trabalho";
-        }
-        if(type2.isSelected()){
-            type = "Tarefa de Casa";
-        }
+        public void fillTable() {
+        List<TaskModel> tasks = taskDAO.listTasks();
         
-        model.addRow(new Object[]{1, task.getText(), type, false});
-        inputWindow.dispose();
+        // Limpar a tabela antes de adicionar novos dados
+        // Adicionar as linhas na tabela
+        for (TaskModel taskFromDB : tasks) {
+            Object[] row = new Object[]{
+                taskFromDB.getId(),
+                taskFromDB.getTaskName(),
+                taskFromDB.getTaskType(),
+                taskFromDB.isDone()
+            };
+            model.addRow(row);
+        }
+    }
+    
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        String taskType = "";
+    if (type1.isSelected()) {
+        taskType = "Trabalho";
+    }
+    if (type2.isSelected()) {
+        taskType = "Tarefa de Casa";
+    }
+    
+    // Creating the task object
+    TaskModel newTask = new TaskModel(0, task.getText(), taskType, false);
+
+    // Saving to the database
+    TaskDAO taskDAO = new TaskDAO();
+    taskDAO.addTask(newTask);
+
+    // Adding to the table in the GUI
+    model.addRow(new Object[]{1, task.getText(), taskType, false});
+
+    // Closing the input window
+    inputWindow.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void type1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_type1ActionPerformed

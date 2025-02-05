@@ -2,15 +2,15 @@ package models;
 
 public class TaskModel {
     private int id;
-    private String tarefa;
-    private String tipo;
-    private boolean feita;
+    private String taskName;
+    private String taskType;
+    private boolean isDone;
 
-    public TaskModel(int id, String tarefa, String tipo, boolean feita) {
+    public TaskModel(int id, String taskName, String taskType, boolean isDone) {
         this.id = id;
-        this.tarefa = tarefa;
-        this.tipo = tipo;
-        this.feita = feita;
+        this.taskName = taskName;
+        this.taskType = taskType;
+        this.isDone = isDone;
     }
 
     public int getId() {
@@ -21,27 +21,36 @@ public class TaskModel {
         this.id = id;
     }
 
-    public String getTarefa() {
-        return tarefa;
+    public String getTaskName() {
+        return taskName;
     }
 
-    public void setTarefa(String tarefa) {
-        this.tarefa = tarefa;
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getTaskType() {
+        return taskType;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
     }
 
-    public boolean isFeita() {
-        return feita;
+    public boolean isDone() {
+        return isDone;
     }
 
-    public void setFeita(boolean feita) {
-        this.feita = feita;
+    public void setDone(boolean isDone) {
+        this.isDone = isDone;
     }
+    @Override
+    public String toString() {
+    return "TaskModel{" +
+           "id=" + id +
+           ", taskName='" + taskName + '\'' +
+           ", taskType='" + taskType + '\'' +
+           ", isDone=" + isDone +
+           '}';
+}
 }
