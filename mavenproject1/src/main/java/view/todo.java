@@ -6,7 +6,8 @@ package view;
 
 import javax.swing.table.DefaultTableModel;
 import models.TaskModel;
-import taskDAO.TaskDAO;
+import javax.swing.event.*;
+import repository.TaskRepository;
 import java.util.List;
 
 /**
@@ -20,15 +21,40 @@ public class todo extends javax.swing.JFrame {
      */
     
     DefaultTableModel model;
-    TaskDAO taskDAO;
+    TaskRepository taskRepository;
     
     public todo() {
         initComponents();
         
-        this.taskDAO = new TaskDAO(); 
+        this.taskRepository = new TaskRepository(); 
         model = (DefaultTableModel) table.getModel();
         
         fillTable();
+        
+        model.addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                // Verifique se a alteração foi em uma célula de dados (não em adição ou remoção de linhas/colunas)
+                if (e.getType() == TableModelEvent.UPDATE) {
+                    int row = e.getFirstRow();
+                    int column = e.getColumn();
+
+                    // Obtenha o novo valor da célula
+                    Object newValue = model.getValueAt(row, column);
+
+                    // Obtenha o ID da tarefa (supondo que a primeira coluna seja o ID)
+                    int taskId = (int) model.getValueAt(row, 0);
+                    String taskName = (String) model.getValueAt(row, 1);
+                    String taskType = (String) model.getValueAt(row, 2);
+                    boolean taskValue = (boolean) model.getValueAt(row, 3);
+                    TaskModel task = new TaskModel(taskId, taskName, taskType, taskValue);
+                    taskRepository.updateTask(taskId, task);
+                    // Atualize o banco de dados com a nova informação
+                    // taskDAO.updateTask(taskId, column, newValue);
+                }
+            }
+        });
+        
     }
 
     /**
@@ -53,6 +79,7 @@ public class todo extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
 
         inputWindow.setTitle("Cadastro");
         inputWindow.setMinimumSize(new java.awt.Dimension(400, 400));
@@ -177,6 +204,13 @@ public class todo extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(table);
 
+        jButton2.setText("Editar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -186,7 +220,8 @@ public class todo extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1)
                         .addGap(39, 39, 39)
                         .addComponent(jButton3)))
@@ -200,15 +235,18 @@ public class todo extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(jButton2))
                 .addGap(17, 17, 17))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+        
+    
         public void fillTable() {
-        List<TaskModel> tasks = taskDAO.listTasks();
+        List<TaskModel> tasks = taskRepository.listTasks();
         
         // Limpar a tabela antes de adicionar novos dados
         // Adicionar as linhas na tabela
@@ -232,17 +270,12 @@ public class todo extends javax.swing.JFrame {
         taskType = "Tarefa de Casa";
     }
     
-    // Creating the task object
     TaskModel newTask = new TaskModel(0, task.getText(), taskType, false);
 
-    // Saving to the database
-    TaskDAO taskDAO = new TaskDAO();
-    taskDAO.addTask(newTask);
+    taskRepository.addTask(newTask);
 
-    // Adding to the table in the GUI
     model.addRow(new Object[]{1, task.getText(), taskType, false});
 
-    // Closing the input window
     inputWindow.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -267,9 +300,19 @@ public class todo extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        if(table.getSelectedRow() != -1)
-            model.removeRow(table.getSelectedRow());
+        if(table.getSelectedRow() != -1){
+            int selectedRow = table.getSelectedRow();
+            int id = (int) table.getValueAt(selectedRow, 0);
+            model.removeRow(selectedRow);
+            taskRepository.removeTask(id);
+            
+        }
+            
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -310,6 +353,7 @@ public class todo extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JDialog inputWindow;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
